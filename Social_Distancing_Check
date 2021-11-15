@@ -1,0 +1,198 @@
+from tkinter import*
+import tkinter as tk
+import tkinter.scrolledtext as tkst
+from tkinter import Menu
+from tkinter import ttk
+from tkinter import messagebox
+import time
+
+
+#알아보기 버튼을 눌렀을 때
+def clickOK():
+    text = '\n-------------------------\
+            방문하실 지역은 %s입니다.\
+            \n전체 인원 수는 %s명이고, 백신 접종 완료자는 %s명입니다.'%(Level.get(),total.get(),vac.get())   #입력한 인원 정보 출력
+    private()
+    scrt.insert(tk.INSERT, text)                                                                             #텍스트를 스크롤에 삽입
+    scrt.see(tk.END)
+
+
+
+#종료를 눌렀을 때
+def clickExit():
+    win.quit()
+    win.destroy()
+    exit()
+
+#관리자가 접속했을 때
+def manage():
+    if password.get() == 'helloworld':
+        text = "<지역별 거리두기 단계 정보>\
+                \n아래 링크에서 코드를 다운 받은 후, 이미지 파일을 수정하세요.\n☞☜"                      #올바른 암호인 경우 코드를 수정할 수 있도록, 코드가 있는 웹페이지 링크를 알려줌
+        scrt.insert(tk.INSERT, text)                  
+        scrt.see(tk.END)
+    elif password.get() == "":
+        pass
+    else:
+        messagebox.showinfo('관리자 암호 오류','잘못된 암호입니다. \n다시 입력하세요.')                    #잘못된 암호인 경우 잘못된 암호임을 알려줌
+        
+
+
+    
+def private():
+    if val2.get() != 1:                                                                                    #사적 모임이 아닌 경우, 방역 수칙을 알아볼 수 있는 웹페이지 링크를 알려줌
+        text = '사적 모임이 아닌 경우, \n방문 장소에 따라 다른 \n방역 수칙이 적용됩니다.\
+                \n다음 사이트에 접속해서 방역 수칙을 알아보세요. \
+                \n☞http://ncov.mohw.go.kr/☜'
+        scrt.insert(tk.INSERT, text)                
+        scrt.see(tk.END)
+    else:
+        if Level.get() == '4단계':                                                                         #4단계인 경우
+            if val1.get() == 1 and (total.get()>=9):                                                       #24시 이후이고 총 인원 수가 9명 이상인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능하고, \n인원 규칙에 어긋납니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+            elif val1.get() ==1 and (total.get()<9 and total.get()-vac.get()>=5):                          #24시 이후이고 백신 미접종자 수가 5명 이상인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능하고, \n인원 규칙에 어긋납니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+            elif val1.get() == 1 and (total.get()<9 and total.get()-vac.get()<5):                          #인원 조건에는 부합하지만 24시 이후인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능합니다.'
+                scrt.insert(tk.INSERT, text)
+                scrt.see(tk.END)
+            else:                                                                                          #24시 전인 경우
+                if total.get() < 9 and total.get()-vac.get()<5:                                            #24시 이전이면서 인원 조건에 부합하는 경우
+                    text = '모임이 가능합니다.'
+                    scrt.insert(tk.INSERT, text)                
+                    scrt.see(tk.END)   
+                else:                                                                                      #24시 이전이지만 인원 조건에 부합하지 않는 경우
+                    text = '모임이 불가능합니다. 인원 규칙에 어긋납니다.'
+                    scrt.insert(tk.INSERT, text)                
+                    scrt.see(tk.END)
+        elif Level.get() == '3단계':                                                                       #3단계인 경우
+            if val1.get() == 1 and (total.get()>=11):                                                      #24시 이후이고 총 인원 수가 11명 이상인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능하고, \n인원 규칙에 어긋납니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+            elif val1.get() ==1 and (total.get()<11 and total.get()-vac.get()>=5):                         #24시 이후이고 백신 미접종자 수가 5명 이상인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능하고, \n인원 규칙에 어긋납니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+            elif val1.get() == 1 and (total.get()<11 and total.get()-vac.get()<5):                         #인원 조건에는 부합하지만 24시 이후인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능합니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+            else:                                                                                          #24시 전인 경우
+                if total.get() < 11 and total.get()-vac.get()<5:                                           #24시 이전이면서 인원 조건에 부합하는 경우
+                    text = '모임이 가능합니다.'
+                    scrt.insert(tk.INSERT, text)                
+                    scrt.see(tk.END)
+                else:                                                                                      #24시 이전이지만 인원 조건에 부합하지 않는 경우
+                    text = '모임이 불가능합니다. 인원 규칙에 어긋납니다.'
+                    scrt.insert(tk.INSERT, text)                
+                    scrt.see(tk.END)
+        elif Level.get() == '2단계':                                                                       #2단계인 경우
+            if val1.get() == 1:                                                                            #24시 이후인 경우
+                text = '모임이 불가능합니다. 24시 이후에는 모임이 불가능합니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+            else:                                                                                          #24시 전인 경우
+                text = '모임이 가능합니다.'
+                scrt.insert(tk.INSERT, text)                
+                scrt.see(tk.END)
+        else:                                                                                              #1단계인 경우
+            text = '모임이 가능합니다.'
+            scrt.insert(tk.INSERT, text)                
+            scrt.see(tk.END)
+
+
+if __name__ == '__main__':
+    win = tk.Tk()                                   
+    win.title("사회적 거리두기 모임 판별 프로그램")                     
+    #이용 방법 문구
+    labelIntro = ttk.Label(win, text="방문하실 지역의 거리두기 단계와 \n     인원 정보를 입력하세요."
+                           ,padding=(0,30),foreground='black',background='#FFD8D8',font=('맑은 고딕',16))    
+    labelIntro.grid(column=0, row=0,columnspan=3,rowspan=2)
+    
+    #단계 문구
+    labelLevel = ttk.Label(win, text="단 계",font=('맑은 고딕',11))    
+    labelLevel.grid(column=0, row=2)
+    
+    #전체 인원 수 문구
+    labeltotal = ttk.Label(win, text="   전 체 \n 인 원 수",font=('맑은 고딕',11))
+    labeltotal.grid(column=1, row=2)
+    
+    #백신 접종 완료자 수 문구
+    labelvac = ttk.Label(win, text="  백 신 접 종 \n  완 료 자 수",font=('맑은 고딕',11))
+    labelvac.grid(column=2,row=2)
+    
+    #시간 문구
+    current_time=time.strftime('%H:%M')
+    labeltime=ttk.Label(win, text=str("현재 시각: ")+current_time)
+    labeltime.grid(column=3,row=0)
+    
+    #관리자 암호 버튼
+    labelpw = ttk.Button(win,text="관 리 자 암 호",command=manage)
+    labelpw.grid(column=0,row=9)
+    
+    #이미지
+    image = tk.PhotoImage(file='covidmap.png')
+    image = image.zoom(20)
+    image = image.subsample(32)
+    labelimage = tk.Label(win,image=image)
+    labelimage.grid(column=3, row=1, rowspan =9)
+
+    #단계 선택
+    Level = tk.StringVar() 
+    LevelCombo = ttk.Combobox(win, width=6, textvariable=Level)
+    LevelCombo['values'] = ("1단계", "2단계","3단계","4단계")
+    LevelCombo.grid(column=0, row=3)
+    LevelCombo.current(0)
+    
+    #전체 인원 수 입력창
+    total = tk.IntVar()
+    totalEntered = ttk.Entry(win, width=5, textvariable=total)
+    totalEntered.grid(column=1, row=3)
+    
+    #백신 접종 완료자 수 입력창
+    vac = tk.IntVar()
+    vacEntered = ttk.Entry(win, width=5, textvariable=vac)
+    vacEntered.grid(column=2, row=3)
+    
+    #관리자 암호 입력창
+    password = StringVar()  
+    passwordEntered = Entry(win,width=15,textvariable=password,bg='pink')
+    passwordEntered.grid(column=1, row=9)
+    manage()
+    
+    #알아보기 버튼
+    action = ttk.Button(win, text="알아보기", command=clickOK)
+    action.grid(column=2, row=9)
+    
+    #문구가 나타나는 스크롤창 
+    scrt = tkst.ScrolledText(win, width=33, height=3, wrap=tk.WORD)
+    scrt.grid(column=0, row=5, columnspan=3, rowspan=3)
+    scrt.focus_set()
+
+    #24시 이상 여부 선택 버튼
+    val1 = tk.BooleanVar()
+    val1.set(True)
+    check1 = tk.Checkbutton(win, text = '24시 이상 여부',variable=val1,font=('맑은 고딕',10))
+    check1.grid(column=0, row=8)
+    
+    #사적 모임 여부 선택 버튼 
+    val2 = tk.BooleanVar()
+    val2.set(True)
+    check2 = tk.Checkbutton(win, text="사적 모임 여부", variable=val2,font=('맑은 고딕',10))
+    check2.grid(column=2, row=8)
+
+    #메뉴
+    menuBar = Menu(win)                                     
+    win.config(menu=menuBar)
+
+    fileMenu = Menu(menuBar, tearoff=0)                     
+    fileMenu.add_command(label="종료", command=clickExit)
+    menuBar.add_cascade(label="메뉴",menu=fileMenu)
+
+    win.resizable(0, 0)
+    win.mainloop()  
